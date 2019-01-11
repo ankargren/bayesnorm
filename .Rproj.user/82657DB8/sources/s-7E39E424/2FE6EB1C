@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1547206818931.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4257378034",
+    "id" : "2FE6EB1C",
+    "lastKnownWriteTime" : 1547206807,
+    "last_content_update" : 1547206807,
+    "path" : "C:/Users/seban876/Box Sync/R/bayesnorm/src/Makevars.win",
+    "project_path" : "src/Makevars.win",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "makefile"
+}
