@@ -20,4 +20,21 @@ inline arma::vec mvn_cbm(const arma::mat & Phi, const arma::vec & d,
   
   return theta;
 }
+
+// [[Rcpp::export]]
+std::vector<arma::mat> rnorm_posterior(const arma::mat & Phi, const arma::vec & d, 
+                                       const arma::vec & alpha, unsigned int seed, unsigned int ncores = 1) {
+  dqrng::normal_distribution dist(0.0, 1.0);
+  dqrng::xoshiro256plus rng(seed);
+  std::vector<arma::mat> res(ncores);
+  
+#pragma omp parallel num_threads(ncores)
+{
+  dqrng::xoshiro256plus lrng(rng);      // make thread local copy of rng 
+  lrng.jump(omp_get_thread_num() + 1);  // advance rng by 1 ... ncores jumps 
+  res[omp_get_thread_num()] = mvn_cbm(Phi, d, alpha, [&](){return dist(lrng);});
+}
+return res;
+}
+
 #endif

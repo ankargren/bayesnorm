@@ -9,9 +9,10 @@
         "-std=gnu++11",
         "-IC:/PROGRA~1/R/R-35~1.1/include",
         "-DNDEBUG",
+        "-IC:/Users/seban876/Box Sync/R/bayesnorm/inst/include",
         "-fopenmp"
     ],
-    "hash" : "154720680715472068071547206807",
+    "hash" : "15472130751547211910",
     "is_cpp" : true,
     "pch" : "Rcpp"
 }

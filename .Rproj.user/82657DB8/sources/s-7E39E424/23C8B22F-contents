@@ -8,4 +8,4 @@ Maintainer: Who to complain to <yourfault@somewhere.net>
 Description: Provides routines to sample from normal posterior distributions using the algorithms by Bhattacharya, Chakraborty and Mallick (2016) <doi:10.1093/biomet/asw042> and Rue (2001) <doi:10.1111/1467-9868.00288>.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.0)
-LinkingTo: Rcpp, RcppArmadillo, dqrng
+LinkingTo: Rcpp, RcppArmadillo

@@ -3,5 +3,13 @@
 
 #include <RcppArmadillo.h>
 
+#ifdef ARMA_DONT_USE_OPENMP
+#else
+  #include <omp.h>
+  #include <xoshiro.h>
+  #include <dqrng_distribution.h>
+#endif
+
 #include <mvn_cbm.h>
+
 #endif
