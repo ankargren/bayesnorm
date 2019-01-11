@@ -5,14 +5,14 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "816994404",
+    "hash" : "2049320361",
     "id" : "2FE6EB1C",
-    "lastKnownWriteTime" : 1547211910,
-    "last_content_update" : 1547211910627,
+    "lastKnownWriteTime" : 1547216088,
+    "last_content_update" : 1547216088823,
     "path" : "C:/Users/seban876/Box Sync/R/bayesnorm/src/Makevars.win",
     "project_path" : "src/Makevars.win",
     "properties" : {
-        "cursorPosition" : "14,32",
+        "cursorPosition" : "10,15",
         "scrollLine" : "0"
     },
     "relative_order" : 2,

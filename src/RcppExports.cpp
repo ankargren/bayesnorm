@@ -7,22 +7,36 @@
 
 using namespace Rcpp;
 
-// wrapper
-arma::mat wrapper(const arma::mat& Phi, const arma::vec& d, const arma::vec& alpha);
-RcppExport SEXP _bayesnorm_wrapper(SEXP PhiSEXP, SEXP dSEXP, SEXP alphaSEXP) {
+// rmvn_bcm
+arma::mat rmvn_bcm(const arma::mat& Phi, const arma::vec& d, const arma::vec& alpha);
+RcppExport SEXP _bayesnorm_rmvn_bcm(SEXP PhiSEXP, SEXP dSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type Phi(PhiSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type d(dSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type alpha(alphaSEXP);
-    rcpp_result_gen = Rcpp::wrap(wrapper(Phi, d, alpha));
+    rcpp_result_gen = Rcpp::wrap(rmvn_bcm(Phi, d, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rmvn_rue
+arma::mat rmvn_rue(const arma::mat& Phi, const arma::vec& d, const arma::vec& alpha);
+RcppExport SEXP _bayesnorm_rmvn_rue(SEXP PhiSEXP, SEXP dSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type Phi(PhiSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type d(dSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(rmvn_rue(Phi, d, alpha));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bayesnorm_wrapper", (DL_FUNC) &_bayesnorm_wrapper, 3},
+    {"_bayesnorm_rmvn_bcm", (DL_FUNC) &_bayesnorm_rmvn_bcm, 3},
+    {"_bayesnorm_rmvn_rue", (DL_FUNC) &_bayesnorm_rmvn_rue, 3},
     {NULL, NULL, 0}
 };
 

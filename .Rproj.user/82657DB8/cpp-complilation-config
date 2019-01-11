@@ -12,7 +12,7 @@
         "-IC:/Users/seban876/Box Sync/R/bayesnorm/inst/include",
         "-fopenmp"
     ],
-    "hash" : "15472130751547211910",
+    "hash" : "15472166211547216088",
     "is_cpp" : true,
     "pch" : "Rcpp"
 }

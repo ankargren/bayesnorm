@@ -4,8 +4,8 @@ Title: Efficient Sampling of Normal Posterior Distributions
 Version: 0.1.0
 Date: 2019-01-11
 Authors@R: c(person("Sebastian", "Ankargren", email = "sebastian.ankargren@statistics.uu.se", role = c("cre", "aut"), comment = c(ORCID = "0000-0003-4415-8734")))
-Maintainer: Who to complain to <yourfault@somewhere.net>
 Description: Provides routines to sample from normal posterior distributions using the algorithms by Bhattacharya, Chakraborty and Mallick (2016) <doi:10.1093/biomet/asw042> and Rue (2001) <doi:10.1111/1467-9868.00288>.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.0)
 LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 6.0.1

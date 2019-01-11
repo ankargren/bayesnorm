@@ -3,36 +3,54 @@
         "definitions" : [
         ],
         "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/bayesnorm.h",
-        "file_last_write" : 1547213068
+        "file_last_write" : 1547217297
     },
     {
         "definitions" : [
             {
                 "column" : 18,
-                "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn_cbm.h",
+                "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn_bcm.h",
                 "kind" : 6,
                 "line" : 3,
-                "name" : "mvn_cbm(const int &, const int &, const int &)",
+                "name" : "mvn_bcm(const int &, const int &, const int &)",
                 "parent_name" : "",
-                "usr" : "c:@F@mvn_cbm#&1I#S0_#S0_#"
+                "usr" : "c:@F@mvn_bcm#&1I#S0_#S0_#"
+            },
+            {
+                "column" : 18,
+                "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn_bcm.h",
+                "kind" : 6,
+                "line" : 28,
+                "name" : "mvn_rue(const int &, const int &, const int &)",
+                "parent_name" : "",
+                "usr" : "c:@F@mvn_rue#&1I#S0_#S0_#"
             }
         ],
-        "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn_cbm.h",
-        "file_last_write" : 1547213070
+        "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn_bcm.h",
+        "file_last_write" : 1547217122
     },
     {
         "definitions" : [
             {
                 "column" : 11,
-                "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/src/test.cpp",
+                "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/src/wrapper.cpp",
                 "kind" : 6,
-                "line" : 4,
-                "name" : "wrapper(const arma::mat &, const arma::vec &, const arma::vec &)",
+                "line" : 54,
+                "name" : "rmvn_bcm(const arma::mat &, const arma::vec &, const arma::vec &)",
                 "parent_name" : "",
-                "usr" : "c:@F@wrapper#&1$@N@arma@C@Mat>#d#&1$@N@arma@C@Col>#d#S2_#"
+                "usr" : "c:@F@rmvn_bcm#&1$@N@arma@C@Mat>#d#&1$@N@arma@C@Col>#d#S2_#"
+            },
+            {
+                "column" : 11,
+                "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/src/wrapper.cpp",
+                "kind" : 6,
+                "line" : 61,
+                "name" : "rmvn_rue(const arma::mat &, const arma::vec &, const arma::vec &)",
+                "parent_name" : "",
+                "usr" : "c:@F@rmvn_rue#&1$@N@arma@C@Mat>#d#&1$@N@arma@C@Col>#d#S2_#"
             }
         ],
-        "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/src/test.cpp",
-        "file_last_write" : 1547213100
+        "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/src/wrapper.cpp",
+        "file_last_write" : 1547218356
     }
 ]
