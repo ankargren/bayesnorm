@@ -1,5 +1,5 @@
-#ifndef BAYESNORM_MVN_BCM_H
-#define BAYESNORM_MVN_BCM_H
+#ifndef BAYESNORM_MVN_H
+#define BAYESNORM_MVN_H
 inline arma::vec mvn_bcm(const arma::mat & Phi, const arma::vec & d, 
                          const arma::vec & alpha) {
   arma::uword n = Phi.n_rows;

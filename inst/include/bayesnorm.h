@@ -2,6 +2,6 @@
 #define BAYESNORM_BAYESNORM_H
 
 #include <RcppArmadillo.h>
-#include <mvn_bcm.h>
+#include <mvn.h>
 
 #endif
