@@ -3,13 +3,13 @@
         "definitions" : [
         ],
         "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/bayesnorm.h",
-        "file_last_write" : 1547217297
+        "file_last_write" : 1547221583
     },
     {
         "definitions" : [
             {
                 "column" : 18,
-                "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn_bcm.h",
+                "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn.h",
                 "kind" : 6,
                 "line" : 3,
                 "name" : "mvn_bcm(const int &, const int &, const int &)",
@@ -18,7 +18,7 @@
             },
             {
                 "column" : 18,
-                "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn_bcm.h",
+                "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn.h",
                 "kind" : 6,
                 "line" : 28,
                 "name" : "mvn_rue(const int &, const int &, const int &)",
@@ -26,8 +26,8 @@
                 "usr" : "c:@F@mvn_rue#&1I#S0_#S0_#"
             }
         ],
-        "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn_bcm.h",
-        "file_last_write" : 1547217122
+        "file" : "C:/Users/seban876/Box Sync/R/bayesnorm/inst/include/mvn.h",
+        "file_last_write" : 1547221592
     },
     {
         "definitions" : [

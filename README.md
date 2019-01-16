@@ -2,22 +2,199 @@
 bayesnorm
 =========
 
-Efficient Sampling of Normal Posterior Distributions
-----------------------------------------------------
+*Efficient Sampling of Normal Posterior Distributions*
 
-The `rmvn_bcm` and `rmvn_rue` functions allow for efficient sampling from normal posterior distributions. The posterior distribution should have the form `mu= Sigma * Phi' * alpha`, where the posterior covariance matrix is `Sigma = (Phi' * Phi + D^{-1})^{-1}` and `D` is a diagonal matrix.
+About
+-----
 
-The `rmvn_bcm` is appropriate when `n<p`, whereas `rmvn_rue` is typically the faster alternative when `n>p`.
-
-The sampling routines are based on the proposals by Bhattacharya, Chakraborty and Mallick (2016) and Rue (2001). The former is based on an idea of avoiding operations in the `p` dimension in favor of working in the `n` dimension, which is why it is preferrable when `n<p`. The latter sampling routine instead does the opposite.
-
-The C++ implementations are available as headers and can therefore be called directly in C++ (e.g. via Rcpp) if necessary by other packages.
+The `bayesnorm` package provides two functions, `rmvn_bcm` and `rmvn_rue`, which allow for efficient sampling from normal posterior distributions. The posterior distribution should have the form `mu = Sigma * Phi' * alpha`, where the posterior covariance matrix is `Sigma = (Phi' * Phi + D^{-1})^{-1}` and `D` is a diagonal matrix. This is the ubiquitous form of normal posteriors. It shows up in standard Bayesian linear regression as well as when using scale mixtures such as the horseshoe prior or other priors from the global-local shrinkage family. The idea of this package is to provide C++ headers so that sampling routines specifically tailored for the form of the posterior can be employed, which can speed up computations notably. The main use of the package is therefore for building and implementing Gibbs samplers. In addition to the C++ headers, simple wrappers are available for use from R directly.
 
 Installation
 ------------
 
-Example
--------
+The package is currently GitHub only and can be installed using `devtools`:
+
+``` r
+devtools::install_github("ankargren/bayesnorm")
+```
+
+Sampling routines
+-----------------
+
+The `rmvn_bcm` is appropriate when `n<p`, whereas `rmvn_rue` is typically the faster alternative when `n>p`.
+
+The sampling routines are based on the proposals by Bhattacharya, Chakraborty and Mallick (2016) and Rue (2001). The former is based on an idea of avoiding operations in the `p` dimension in favor of working in the `n` dimension, which is why it is preferrable when `n<p`. The latter sampling routine instead does the opposite. The Bhattacharya, Chakraborty and Mallick (2016) algorithm has complexity *O*(*n*<sup>2</sup>*p*), whereas the Rue (2001) routine has complexity *O*(*p*<sup>3</sup>).
+
+The C++ implementations are available as headers and can therefore be called directly in C++ (e.g. via Rcpp) if necessary by other packages.
+
+Example 1
+---------
+
+We can first verify that the two functions draw from the correct distribution by a simple comparison with the sampling function in the `mgcv` package. First generate some toy data:
+
+``` r
+library(bayesnorm)
+set.seed(10871)
+X <- matrix(rnorm(1000), 50, 20)
+d <- runif(20, 0, 1)
+alpha <- rnorm(50)
+```
+
+Next, call the two functions a large number of times:
+
+``` r
+rue <- replicate(100000, rmvn_rue(X, d, alpha), simplify = "matrix")
+bcm <- replicate(100000, rmvn_bcm(X, d, alpha), simplify = "matrix")
+```
+
+Let's also contrast these results with using an approach where we compute the posterior mean and covariance and generate from a normal distribution with mean `mu` and covariance matrix `Sigma`. The results should be the same, but it would be an inefficient way to do it.
+
+``` r
+Sigma <- solve(crossprod(X) + diag(1/d))
+mu <- Sigma %*% crossprod(X, alpha)
+mgcv <- mgcv::rmvn(100000,c(mu),Sigma)
+```
+
+If we now compute the mean over the draws, we can see that they are close:
+
+``` r
+cbind(rue = rowMeans(rue),
+      bcm = rowMeans(bcm),
+      mgcv = colMeans(mgcv))
+```
+
+    ##                rue          bcm         mgcv
+    ##  [1,] -0.051665386 -0.050506259 -0.050840758
+    ##  [2,] -0.108777771 -0.111043508 -0.110721733
+    ##  [3,] -0.009251537 -0.009510866 -0.009484733
+    ##  [4,] -0.245799604 -0.246176229 -0.244988191
+    ##  [5,]  0.015503416  0.015937013  0.016012723
+    ##  [6,] -0.092582750 -0.093647313 -0.091423241
+    ##  [7,] -0.114602481 -0.114603507 -0.115584874
+    ##  [8,] -0.239047967 -0.239518257 -0.239202218
+    ##  [9,]  0.036776290  0.036206388  0.037166327
+    ## [10,] -0.008249618 -0.007448558 -0.008019193
+    ## [11,]  0.178470461  0.179771682  0.179340654
+    ## [12,]  0.141729718  0.141786773  0.141908386
+    ## [13,] -0.012537412 -0.012673768 -0.012863131
+    ## [14,]  0.064166178  0.064871815  0.063416370
+    ## [15,]  0.148037818  0.147134907  0.148304541
+    ## [16,] -0.040774821 -0.040515076 -0.039397518
+    ## [17,]  0.049774601  0.049183180  0.049634386
+    ## [18,]  0.030731317  0.031099970  0.029598139
+    ## [19,]  0.232294602  0.231776831  0.231537055
+    ## [20,]  0.138275893  0.138062447  0.137994832
+
+While this does not prove anything, it shows us that the means of a large number of draws using the three functions are essentially the same.
+
+Example 2
+---------
+
+For the second example, we can investigate what use of these two functions mean in terms of efficiency. First, we load the `bayesnorm` and `tidyverse` packages:
+
+``` r
+library(bayesnorm)
+library(tidyverse)
+```
+
+    ## -- Attaching packages ----------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
+
+    ## v ggplot2 3.0.0     v purrr   0.2.4
+    ## v tibble  1.4.2     v dplyr   0.7.4
+    ## v tidyr   0.8.0     v stringr 1.3.0
+    ## v readr   1.1.1     v forcats 0.3.0
+
+    ## -- Conflicts -------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+    ## x dplyr::filter() masks stats::filter()
+    ## x dplyr::lag()    masks stats::lag()
+
+Next, set the seed and values of `n` and `p` to look at. The function `sample_fun()` computes the posterior mean and covariance and then makes a draw using the `mgcv::rmvn()` function.
+
+``` r
+set.seed(16379)
+n_vec <- c(50, 100, 200, 500)
+p_vec <- c(50, 100, 200, 500)
+
+sample_fun <- function(X, d, alpha) {
+  Sigma <- solve(crossprod(X) + diag(1/d))
+  mu <- Sigma %*% crossprod(X, alpha)
+  out <- mgcv::rmvn(1,c(mu),Sigma)
+  return(out)
+}
+```
+
+The `data.frame` `combs` stores all the combinations of `n` and `p`; we will go through its rows and fill in timings for the three sampling functions:
+
+``` r
+combs <- expand.grid(n = n_vec, p = p_vec, bcm = NA, mgcv = NA, rue = NA)
+```
+
+Finally, loop through `combs`, generate data and time the functions (NB: it takes some time):
+
+``` r
+for (i in 1:nrow(combs)) {
+  n <- combs[i, 1]
+  p <- combs[i, 2]
+  
+  X <- matrix(rnorm(n*p), n, p)
+  d <- runif(p, 0, 1)
+  alpha <- rnorm(n)
+  mb <- microbenchmark::microbenchmark(rue = rmvn_rue(X, d, alpha),
+                                 bcm = rmvn_bcm(X, d, alpha),
+                                 mgcv = sample_fun(X, d, alpha), times = 1000)
+  
+  combs[i, 3:5] <- as_tibble(mb) %>%
+    group_by(expr) %>%
+    summarize(median = median(time)/1e6) %>%
+    arrange(as.character(expr)) %>% 
+    pull(median)
+  
+}
+```
+
+Before plotting, put the data into long format:
+
+``` r
+theme_set(theme_minimal())
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", 
+               "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+plot_df <- as_tibble(combs) %>%
+  gather(bcm:rue, key = "Method", value = "Milliseconds (log scale)")
+```
+
+First, we plot the results letting the `x` axis be the number of covariates `p`. For each facet, `n` is fixed.
+
+``` r
+plot_df %>%
+  ggplot(aes(x = p, y = `Milliseconds (log scale)`)) +
+  geom_line(aes(color = Method)) +
+  facet_grid(n~.,labeller = labeller(.rows = label_both, .cols = label_both)) +
+  scale_y_continuous(trans = "log2") +
+  scale_color_manual(values = cbPalette)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-11-1.png)
+
+What the figure is showing is that:
+
+1.  using the `rmvn_rue()` function, specifically tailored for this specific posterior distribution, is always better than computing `mu` and `Sigma` and then drawing from the posterior
+2.  `rmvn_rue()` and `mgcv::rmvn()` are unaffected across facets, i.e. the sample size does not affect the computational time
+3.  if `n` is small relative to `p`, the `rmvn_bcm()` function offers a substantial speed improvement
+
+In the second figure, we instead fix `p` and let the `x` axis be the sample size `n`:
+
+``` r
+plot_df %>%
+  ggplot(aes(x = n, y = `Milliseconds (log scale)`)) +
+  geom_line(aes(color = Method)) +
+  facet_grid(p~.,labeller = labeller(.rows = label_both, .cols = label_both)) +
+  scale_y_continuous(trans = "log2") +
+  scale_color_manual(values = cbPalette)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-12-1.png)
+
+The Figure tells the same story, but from a different perspective. The take-away message is that notable speed improvements can be obtained by using one of the two sampling routines offered in the package when sampling from normal posterior distributions.
 
 Incorporation in other packages
 -------------------------------
