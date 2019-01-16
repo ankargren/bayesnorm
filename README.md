@@ -2,7 +2,9 @@
 bayesnorm
 =========
 
-*Efficient Sampling of Normal Posterior Distributions*
+*Efficient sampling of normal posterior distributions*
+
+[![Build Status](https://travis-ci.org/ankargren/bayesnorm.svg?branch=master)](https://travis-ci.org/ankargren/bayesnorm)
 
 About
 -----
@@ -99,10 +101,24 @@ library(tidyverse)
 
     ## -- Attaching packages ----------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
 
-    ## v ggplot2 3.0.0     v purrr   0.2.4
-    ## v tibble  1.4.2     v dplyr   0.7.4
-    ## v tidyr   0.8.0     v stringr 1.3.0
-    ## v readr   1.1.1     v forcats 0.3.0
+    ## v ggplot2 3.1.0     v purrr   0.2.5
+    ## v tibble  2.0.1     v dplyr   0.7.8
+    ## v tidyr   0.8.2     v stringr 1.3.1
+    ## v readr   1.3.1     v forcats 0.3.0
+
+    ## Warning: package 'ggplot2' was built under R version 3.5.2
+
+    ## Warning: package 'tibble' was built under R version 3.5.2
+
+    ## Warning: package 'tidyr' was built under R version 3.5.2
+
+    ## Warning: package 'readr' was built under R version 3.5.2
+
+    ## Warning: package 'purrr' was built under R version 3.5.2
+
+    ## Warning: package 'dplyr' was built under R version 3.5.2
+
+    ## Warning: package 'stringr' was built under R version 3.5.2
 
     ## -- Conflicts -------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
     ## x dplyr::filter() masks stats::filter()
@@ -196,8 +212,8 @@ plot_df %>%
 
 The Figure tells the same story, but from a different perspective. The take-away message is that notable speed improvements can be obtained by using one of the two sampling routines offered in the package when sampling from normal posterior distributions.
 
-Incorporation in other packages
--------------------------------
+Incorporation into other packages
+---------------------------------
 
 ### References
 
