@@ -1,4 +1,4 @@
-#include <bayesnorm.h>
+#include "bayesnorm.h"
 //' Efficient Sampling of Normal Posterior Distributions
 //' 
 //' The \code{rmvn_bcm} and \code{rmvn_rue} functions allow for efficient 

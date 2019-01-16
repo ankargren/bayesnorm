@@ -4,7 +4,7 @@ bayesnorm
 
 *Efficient sampling of normal posterior distributions*
 
-[![Build Status](https://travis-ci.org/ankargren/bayesnorm.svg?branch=master)](https://travis-ci.org/ankargren/bayesnorm)
+[![Build Status](https://travis-ci.org/ankargren/bayesnorm.svg?branch=master)](https://travis-ci.org/ankargren/bayesnorm)[![Coverage status](https://codecov.io/gh/ankargren/bayesnorm/branch/master/graph/badge.svg)](https://codecov.io/github/ankargren/bayesnorm?branch=master)
 
 About
 -----
@@ -99,30 +99,16 @@ library(bayesnorm)
 library(tidyverse)
 ```
 
-    ## -- Attaching packages ----------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
+    ## ── Attaching packages ───────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 
-    ## v ggplot2 3.1.0     v purrr   0.2.5
-    ## v tibble  2.0.1     v dplyr   0.7.8
-    ## v tidyr   0.8.2     v stringr 1.3.1
-    ## v readr   1.3.1     v forcats 0.3.0
+    ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
+    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
+    ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+    ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## Warning: package 'ggplot2' was built under R version 3.5.2
-
-    ## Warning: package 'tibble' was built under R version 3.5.2
-
-    ## Warning: package 'tidyr' was built under R version 3.5.2
-
-    ## Warning: package 'readr' was built under R version 3.5.2
-
-    ## Warning: package 'purrr' was built under R version 3.5.2
-
-    ## Warning: package 'dplyr' was built under R version 3.5.2
-
-    ## Warning: package 'stringr' was built under R version 3.5.2
-
-    ## -- Conflicts -------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
+    ## ── Conflicts ──────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
 
 Next, set the seed and values of `n` and `p` to look at. The function `sample_fun()` computes the posterior mean and covariance and then makes a draw using the `mgcv::rmvn()` function.
 

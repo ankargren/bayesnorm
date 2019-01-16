@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 *Efficient sampling of normal posterior distributions*
 
-[![Build Status](https://travis-ci.org/ankargren/bayesnorm.svg?branch=master)](https://travis-ci.org/ankargren/bayesnorm)
+[![Build Status](https://travis-ci.org/ankargren/bayesnorm.svg?branch=master)](https://travis-ci.org/ankargren/bayesnorm)[![Coverage status](https://codecov.io/gh/ankargren/bayesnorm/branch/master/graph/badge.svg)](https://codecov.io/github/ankargren/bayesnorm?branch=master)
 
 ## About
 

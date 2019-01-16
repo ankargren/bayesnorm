@@ -3,20 +3,19 @@
 ##  Copyright (C) 2016 - 2017  Dirk Eddelbuettel for
 ##  the RcppArmadillo package. Licensed under GPL-2 or later
 ##  This file is a subset of the configure.ac used by
-##  RcppArmadillo, adapted for the mfbvar package by
-##  Sebastian Ankargren, and used with slight modification for the
-##  RcppDist package by JB Duck-Mayr
+##  RcppArmadillo, adapted to the mfbvar package by
+##  Sebastian Ankargren
 
 ## require at least autoconf 2.61
 AC_PREREQ(2.61)
 
 ## Process this file with autoconf to produce a configure script.
-AC_INIT([RcppDist], 0.1.0)
+AC_INIT([bayesnorm], 0.0.1)
 
 ## Set R_HOME, respecting an environment variable if one is set
 : ${R_HOME=$(R RHOME)}
 if test -z "${R_HOME}"; then
-	AC_MSG_ERROR([Could not determine R_HOME.])
+    AC_MSG_ERROR([Could not determine R_HOME.])
 fi
 ## Use R to set CXX and CXXFLAGS
 CXX=$(${R_HOME}/bin/R CMD config CXX)
@@ -46,12 +45,12 @@ else
    allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
    hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
    if test x"${hasOpenMP}" == x""; then
-	  AC_MSG_RESULT([missing])
-	  openmp_flag="-DARMA_DONT_USE_OPENMP"
+      AC_MSG_RESULT([missing])
+      openmp_flag="-DARMA_DONT_USE_OPENMP"
    else
-	  AC_MSG_RESULT([found])
-	  openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
-	  openmp_cflag='$(SHLIB_OPENMP_CFLAGS)'
+      AC_MSG_RESULT([found])
+      openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
+      openmp_cflag='$(SHLIB_OPENMP_CFLAGS)'
    fi
 fi
 
@@ -59,4 +58,3 @@ AC_SUBST([OPENMP_CFLAG], ["${openmp_cflag}"])
 AC_SUBST([OPENMP_FLAG], ["${openmp_flag}"])
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
-
