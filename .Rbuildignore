@@ -10,3 +10,4 @@
 ^config.yml$
 ^docs$
 ^README_files$
+^\.travis\.yml$

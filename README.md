@@ -99,14 +99,14 @@ library(bayesnorm)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ───────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
     ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
     ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## ── Conflicts ──────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -196,10 +196,16 @@ plot_df %>%
 
 ![](README_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
-The Figure tells the same story, but from a different perspective. The take-away message is that notable speed improvements can be obtained by using one of the two sampling routines offered in the package when sampling from normal posterior distributions.
+The second figure reiterates the point that you can always do better than naive sampling where `mu` and `Sigma` are computed explicitly. The take-away message is that notable speed improvements can be obtained by using one of the two sampling routines offered in the package when sampling from normal posterior distributions. If `p>n`, the `rmvn_bcm` function is the more faster alternative whereas `rmvn_rue` is faster otherwise.
 
 Incorporation into other packages
 ---------------------------------
+
+To use the sampling routines in other RcppArmadillo-based packages, all that is needed is to:
+
+-   add `bayesnorm` in the `LinkingTo` field in the `DESCRIPTION`
+-   add `#include <bayesnorm.h>` at the top of the file calling the functions (or in the package's header file)
+-   the C++ functions are named `mvn_bcm` and `mvn_rue`
 
 ### References
 
