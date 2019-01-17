@@ -29,8 +29,8 @@ The sampling routines are based on the proposals by Bhattacharya, Chakraborty an
 
 The C++ implementations are available as headers and can therefore be called directly in C++ (e.g. via Rcpp) if necessary by other packages.
 
-Example 1
----------
+Example 1: Mean of draws
+------------------------
 
 We can first verify that the two functions draw from the correct distribution by a simple comparison with the sampling function in the `mgcv` package. First generate some toy data:
 
@@ -89,8 +89,8 @@ cbind(rue = rowMeans(rue),
 
 While this does not prove anything, it shows us that the means of a large number of draws using the three functions are essentially the same.
 
-Example 2
----------
+Example 2: Efficiency of sampling routines
+------------------------------------------
 
 For the second example, we can investigate what use of these two functions mean in terms of efficiency. First, we load the `bayesnorm` and `tidyverse` packages:
 
@@ -197,6 +197,119 @@ plot_df %>%
 ![](README_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
 The second figure reiterates the point that you can always do better than naive sampling where `mu` and `Sigma` are computed explicitly. The take-away message is that notable speed improvements can be obtained by using one of the two sampling routines offered in the package when sampling from normal posterior distributions. If `p>n`, the `rmvn_bcm` function is the more faster alternative whereas `rmvn_rue` is faster otherwise.
+
+Example 3: Bayesian linear regression
+-------------------------------------
+
+To see what the gains are in estimating a model, the package RcppDist provides an example of standard Bayesian linear regression. In standard Bayesian linear regression, the posterior mean and variance is constant and can be pre-computed outside of the MCMC loop. However, using scale mixtures and other hierarchical priors (e.g. normal-gamma, horseshoe, Dirichlet-Laplace, etc) the diagonal `D` matrix changes at every iteration, and as such the moments of the conditional posterior can no longer be pre-computed. To mimic this situation but without introducing unnecessary details, we will use the RcppDist linear regression example but fix the error variance to 1 and with the alteration that we compute `mu` and `Sigma` at every iteration (as you would need to do with a hierarchical prior). The RcppDist example with this modification is:
+
+``` cpp
+#include <RcppArmadillo.h>
+#include <mvnorm.h>
+// [[Rcpp::depends(RcppArmadillo, RcppDist)]]
+// [[Rcpp::export]]
+arma::mat bayeslm(const arma::vec& y, const arma::mat& x,
+                   const int iters = 1000) {
+  int p = x.n_cols;
+  arma::vec d = arma::vec(p, arma::fill::ones); // prior variance is 1
+  arma::mat xtx, Sigma, mu;
+  
+  // Storage
+  arma::mat beta_draws(iters, p); // Object to store beta draws in
+  for ( int iter = 0; iter < iters; ++iter ) {
+    xtx = x.t() * x; // X'X
+    xtx.diag() += arma::pow(d, -1.0); // add D^{-1}
+    
+    Sigma = xtx.i(); // the inverse is Sigma
+    mu = Sigma * x.t() * y; // compute mu
+    
+    beta_draws.row(iter) = rmvnorm(1, mu, Sigma);
+  }
+  return beta_draws;
+}
+```
+
+In the code, the diagonal of `D` is taken to be 1, implying that we have a standard normal prior on all of the regression parameters.
+
+To see what use of the `bayesnorm` means in terms of efficiency in this situation, we can create a similar function where we use `mvn_rue()` to sample from the posterior:
+
+``` cpp
+#include <RcppArmadillo.h>
+#include <bayesnorm.h>
+// [[Rcpp::depends(RcppArmadillo, bayesnorm)]]
+// [[Rcpp::export]]
+arma::mat bayeslm_rue(const arma::vec& y, const arma::mat& x,
+                       const int iters = 1000) {
+  int p = x.n_cols;
+  arma::vec d = arma::vec(p, arma::fill::ones);
+  arma::mat beta_draws(p, iters);
+  for ( int iter = 0; iter < iters; ++iter ) {
+    beta_draws.col(iter) = mvn_rue(x, d, y);
+  }
+  return beta_draws;
+}
+```
+
+We will try a sample size of 500 and 100 covariates:
+
+``` r
+n <- 500
+p <- 100
+
+X <- matrix(rnorm(n * p), n, p)
+y <- matrix(rnorm(n), n, 1)
+
+microbenchmark::microbenchmark(bayeslm(y, X), bayeslm_rue(y, X), times = 10)
+```
+
+    ## Unit: seconds
+    ##               expr      min       lq     mean   median       uq      max
+    ##      bayeslm(y, X) 3.225657 3.233842 3.267604 3.260592 3.294917 3.337557
+    ##  bayeslm_rue(y, X) 2.826309 2.843897 2.870777 2.875996 2.889159 2.908320
+    ##  neval
+    ##     10
+    ##     10
+
+Using the `mvn_rue()` function yields about a modest 10% speed improvement.
+
+If we instead study the `p>n` case, improvements are more sizable. Create the same MCMC function but now using `mvn_bcm()` for sampling:
+
+``` cpp
+#include <RcppArmadillo.h>
+#include <bayesnorm.h>
+// [[Rcpp::depends(RcppArmadillo, bayesnorm)]]
+// [[Rcpp::export]]
+arma::mat bayeslm_bcm(const arma::vec& y, const arma::mat& x,
+                       const int iters = 1000) {
+  int p = x.n_cols;
+  arma::vec d = arma::vec(p, arma::fill::ones);
+  arma::mat beta_draws(p, iters);
+  for ( int iter = 0; iter < iters; ++iter ) {
+    beta_draws.col(iter) = mvn_bcm(x, d, y);
+  }
+  return beta_draws;
+}
+```
+
+Setting the sample size to 50 and keeping 100 as the number of covariates shows a more impressive improvement in computational efficiency:
+
+``` r
+n <- 50
+p <- 100
+
+X <- matrix(rnorm(n * p), n, p)
+y <- matrix(rnorm(n), n, 1)
+
+microbenchmark::microbenchmark(bayeslm(y, X), bayeslm_bcm(y, X), times = 10)
+```
+
+    ## Unit: milliseconds
+    ##               expr      min       lq     mean   median       uq      max
+    ##      bayeslm(y, X) 717.8725 721.5729 730.6563 722.1769 724.3650 789.9470
+    ##  bayeslm_bcm(y, X) 237.4618 238.7750 245.0241 242.4934 252.7421 257.5175
+    ##  neval
+    ##     10
+    ##     10
 
 Incorporation into other packages
 ---------------------------------
